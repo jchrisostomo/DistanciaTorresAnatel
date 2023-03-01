@@ -31,15 +31,6 @@ def relatorio_distancias(origem, destino):
     # Constantes
     RAIO = 100
 
-    # Cabeçalho
-
-    print(40 * "#")
-    print(2 * "#" + "Distância entre Torres".center(36) + 2 * "#")
-    print(40 * "#")
-    print(2 * "#" + "João Chrisóstomo Abegão".center(36) + 2 * "#")
-    print(2 * "#" + "joao.abegao@algartelecom.com.br".center(36) + 2 * "#")
-    print(40 * "#")
-
     # Configuração dos arquivos
     print(origem)
     print(destino)
@@ -80,11 +71,11 @@ def relatorio_distancias(origem, destino):
                 distancia = calcular_distancia((origem['Latitude'], origem['Longitude']),
                                                (destino['Latitude'], destino['Longitude']))
                 # Armazena o nome e a distância da localidade de destino na lista
-                distancias.append((destino['NomeEntidade'], destino['NumEstacao'], distancia))
+                distancias.append((destino['NomeEntidade'], destino['NumEstacao'], destino['DataPrimeiroLicenciamento'], distancia))
                 bar()
 
         # Filtra as distâncias para as menores que um raio de x metros
-        distancias_raio = [(nome, numero, dist) for (nome, numero, dist) in distancias if dist <= RAIO]
+        distancias_raio = [(nome, numero, data, dist) for (nome, numero, data, dist) in distancias if dist <= RAIO]
 
         # Imprime o relatório em um arquivo
         relatorio = 40 * "#" + "\n"
@@ -93,8 +84,8 @@ def relatorio_distancias(origem, destino):
         if len(distancias_raio) > 0:
             relatorio += f"Distâncias de até: {RAIO} metros \n"
             relatorio += 40 * "-" + "\n"
-            for (nome, numero, dist) in distancias_raio:
-                relatorio += f"{nome} ({numero}): {dist:.2f}m\n"
+            for (nome, numero, data, dist) in distancias_raio:
+                relatorio += f"{nome} - {data} - {numero}: {dist:.2f} metros\n"
         else:
             relatorio += "Não há localidades de destino a menos de 100m\n"
         relatorio += 40 * "-" + "\n"
@@ -105,6 +96,7 @@ def relatorio_distancias(origem, destino):
 
         with open("relatorio.txt", "a") as f:
             f.write(relatorio)
+
 
 
 # Seleciona o diretório atual
@@ -121,8 +113,20 @@ layout = [
     [sg.Button("Gerar relatório"), sg.Exit("Sair")]
 ]
 
+nomeApp = 'Relatório de Distâncias entre Torres'
+
 # Construir janela
-window = sg.Window('Relatório Ditância de Torres', layout, size=(600, 150))
+window = sg.Window(nomeApp, layout, size=(600, 150))
+
+# Cabeçalho
+print(42 * "#")
+print(2 * "#" + nomeApp.center(38) + 2 * "#")
+print(42 * "#")
+print(2 * "#" + "SQUAD AUTOMAÇÃO".center(38) + 2 * "#")
+print(2 * "#" + "Gerência de Facilities".center(38) + 2 * "#")
+print(42 * "#")
+print(2 * "#" + "João Chrisóstomo Ribeiro Abegão".center(38) + 2 * "#")
+print(42 * "#")
 
 while True:
     event, values = window.read()
